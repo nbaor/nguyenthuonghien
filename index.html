@@ -3,554 +3,494 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NTH · Gallery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Inconsolata:wght@800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>NTH's Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
       --bg: #dad7cd;
-      --surface: #c9c6bc;
-      --nav-h: 64px;
-      --accent: #50574d;
-      --accent2: #50574d;
       --text: #50574d;
-      --muted: #7a8276;
-      --border: rgba(80,87,77,0.18);
-      --radius: 4px;
-      --col-min: 220px;
+      --accent: #50574d;
+      --card-bg: #ece9e1;
+      --shadow: rgba(80,87,77,0.13);
     }
 
-    html, body {
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Sans', sans-serif;
+      font-family: 'Lora', Georgia, serif;
       min-height: 100vh;
-      overflow-x: hidden;
     }
 
-    /* NOISE OVERLAY */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-      opacity: 0.028;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* NAV */
+    /* ── NAV BAR ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-h);
-      background: rgba(218,215,205,0.88);
-      backdrop-filter: blur(18px) saturate(1.4);
-      -webkit-backdrop-filter: blur(18px) saturate(1.4);
-      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 28px;
-      z-index: 100;
+      padding: 0 32px;
+      height: 64px;
+      background: var(--bg);
+      border-bottom: 1.5px solid rgba(80,87,77,0.15);
+      backdrop-filter: blur(6px);
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .logo-mark {
-      width: 32px; height: 32px;
-      border: 1.5px solid var(--accent);
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      position: relative;
-    }
-    .logo-mark::after {
-      content: '';
-      width: 10px; height: 10px;
-      background: var(--accent2);
-      border-radius: 50%;
-    }
-    .logo-text {
-      font-family: 'Special Elite', serif;
-      font-size: 1.15rem;
-      color: var(--accent);
+    .nav-logo {
+      font-family: 'Special Elite', cursive;
+      font-size: 1.55rem;
       letter-spacing: 0.04em;
+      color: var(--text);
+      user-select: none;
     }
 
-    .nav-actions { display: flex; align-items: center; gap: 12px; }
-
-    .count-badge {
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-
-    #add-btn {
-      width: 38px; height: 38px;
+    .nav-add {
+      width: 38px;
+      height: 38px;
+      border: 1.5px solid var(--text);
       border-radius: 50%;
-      border: 1.5px solid var(--accent2);
       background: transparent;
-      color: var(--accent);
-      font-size: 1.4rem;
       cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.2s, transform 0.18s, box-shadow 0.2s;
-      line-height: 1;
-      padding-bottom: 1px;
-    }
-    #add-btn:hover {
-      background: var(--accent2);
-      color: var(--bg);
-      transform: rotate(45deg) scale(1.08);
-      box-shadow: 0 0 18px rgba(201,169,110,0.35);
-    }
-    #file-input { display: none; }
-
-    /* MAIN */
-    main {
-      padding-top: calc(var(--nav-h) + 32px);
-      padding-bottom: 60px;
-    }
-
-    /* EMPTY STATE */
-    #empty-state {
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: calc(100vh - var(--nav-h));
-      gap: 16px;
-      opacity: 0;
-      animation: fadeIn 0.8s 0.3s forwards;
+      transition: background 0.2s, color 0.2s;
+      color: var(--text);
     }
-    #empty-state svg { opacity: 0.2; }
-    #empty-state p {
-      font-family: 'Inconsolata', monospace;
-      font-weight: 800;
-      font-size: 1.4rem;
-      color: var(--muted);
+    .nav-add:hover {
+      background: var(--text);
+      color: var(--bg);
     }
-    #empty-state span {
-      font-size: 0.8rem;
-      color: var(--muted);
-      opacity: 0.6;
-      letter-spacing: 0.1em;
+    .nav-add svg { pointer-events: none; }
+
+    /* ── NAV COUNT ── */
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .nav-count {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      color: rgba(80,87,77,0.6);
       text-transform: uppercase;
     }
 
-    /* MASONRY GRID */
+    /* ── MASONRY GRID ── */
     #gallery {
-      columns: var(--col-min);
-      column-gap: 12px;
-      padding: 0 20px;
+      padding: 36px 28px 60px;
+      columns: 4 220px;
+      column-gap: 18px;
     }
 
-    /* PHOTO CARD */
-    .photo-item {
+    .photo-card {
       break-inside: avoid;
-      margin-bottom: 12px;
-      position: relative;
+      margin-bottom: 18px;
+      border-radius: 4px;
       overflow: hidden;
-      border-radius: 3px;
+      background: var(--card-bg);
+      box-shadow: 0 2px 12px var(--shadow);
+      position: relative;
       cursor: pointer;
-      opacity: 0;
-      transform: translateY(22px) scale(0.97);
-      animation: itemIn 0.55s cubic-bezier(0.22,1,0.36,1) forwards;
-      background: var(--surface);
+      animation: collapse-in 0.55s cubic-bezier(0.22,1,0.36,1) both;
     }
-    .photo-item img {
+
+    @keyframes collapse-in {
+      from { opacity: 0; transform: translateY(24px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .photo-card img {
       display: block;
       width: 100%;
       height: auto;
-      transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+      transition: transform 0.4s ease;
     }
-    .photo-item:hover img { transform: scale(1.04); }
+    .photo-card:hover img { transform: scale(1.04); }
 
-    .photo-overlay {
+    .photo-card .overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
-      opacity: 0;
-      transition: opacity 0.3s;
+      background: rgba(80,87,77,0);
+      transition: background 0.3s;
       display: flex;
       align-items: flex-end;
       padding: 14px;
     }
-    .photo-item:hover .photo-overlay { opacity: 1; }
+    .photo-card:hover .overlay { background: rgba(80,87,77,0.25); }
 
-    .photo-date {
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
-      color: rgba(240,236,228,0.7);
-      text-transform: uppercase;
-    }
-
-    .delete-btn {
+    .photo-card .del-btn {
+      display: none;
       position: absolute;
-      top: 10px; right: 10px;
-      width: 28px; height: 28px;
-      border-radius: 50%;
+      top: 8px; right: 8px;
+      background: rgba(218,215,205,0.88);
       border: none;
-      background: rgba(0,0,0,0.55);
-      color: #fff;
-      font-size: 0.85rem;
+      border-radius: 50%;
+      width: 28px; height: 28px;
+      font-size: 14px;
       cursor: pointer;
-      opacity: 0;
-      transition: opacity 0.25s, background 0.2s;
-      display: flex; align-items: center; justify-content: center;
-      backdrop-filter: blur(4px);
+      color: var(--text);
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
     }
-    .photo-item:hover .delete-btn { opacity: 1; }
-    .delete-btn:hover { background: rgba(200,60,60,0.7); }
+    .photo-card:hover .del-btn { display: flex; }
+    .photo-card .del-btn:hover { background: #e07070; color: #fff; }
 
-    /* LIGHTBOX */
+    /* ── EMPTY STATE ── */
+    #empty-state {
+      position: fixed;
+      inset: 64px 0 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      pointer-events: none;
+    }
+    #empty-state svg { opacity: 0.28; margin-bottom: 6px; }
+    #empty-state .es-title {
+      font-family: 'Special Elite', cursive;
+      font-size: 1.1rem;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      color: var(--text);
+      opacity: 0.75;
+    }
+    #empty-state .es-sub {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text);
+      opacity: 0.4;
+    }
+
+    /* ── MODAL / LIGHTBOX ── */
     #lightbox {
+      display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
       z-index: 200;
-      display: none;
+      background: rgba(30,30,26,0.82);
       align-items: center;
       justify-content: center;
       backdrop-filter: blur(8px);
-      animation: lbIn 0.22s ease;
     }
     #lightbox.open { display: flex; }
     #lightbox img {
       max-width: 90vw;
-      max-height: 90vh;
-      object-fit: contain;
+      max-height: 88vh;
       border-radius: 4px;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.8);
-      animation: imgIn 0.28s cubic-bezier(0.22,1,0.36,1);
+      box-shadow: 0 8px 48px rgba(0,0,0,0.4);
     }
-    #lb-close {
+    #lightbox-close {
       position: absolute;
-      top: 22px; right: 26px;
+      top: 22px; right: 28px;
       background: none;
       border: none;
-      color: var(--text);
-      font-size: 1.6rem;
+      color: #ece9e1;
+      font-size: 2rem;
       cursor: pointer;
-      opacity: 0.6;
-      transition: opacity 0.2s;
       line-height: 1;
+      opacity: 0.7;
+      transition: opacity 0.2s;
     }
-    #lb-close:hover { opacity: 1; }
-    #lb-nav {
-      position: absolute;
-      bottom: 24px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 8px;
-    }
-    .lb-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--muted);
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
-    }
-    .lb-dot.active { background: var(--accent); transform: scale(1.4); }
+    #lightbox-close:hover { opacity: 1; }
 
-    /* DRAG DROP OVERLAY */
-    #drop-zone {
-      position: fixed;
-      inset: 0;
-      background: rgba(201,169,110,0.08);
-      border: 2px dashed var(--accent2);
-      z-index: 150;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      font-style: italic;
-      color: var(--accent);
-      letter-spacing: 0.02em;
-    }
-    #drop-zone.active { display: flex; }
-
-    /* TOAST */
+    /* ── UPLOAD TOAST ── */
     #toast {
       position: fixed;
       bottom: 28px; left: 50%;
-      transform: translateX(-50%) translateY(12px);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--accent);
-      padding: 10px 20px;
-      border-radius: 40px;
-      font-size: 0.82rem;
-      letter-spacing: 0.06em;
-      pointer-events: none;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text);
+      color: var(--bg);
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
       opacity: 0;
-      transition: opacity 0.25s, transform 0.25s;
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
       z-index: 300;
-      white-space: nowrap;
+      font-family: 'Lora', serif;
     }
     #toast.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
 
-    @keyframes fadeIn { to { opacity: 1; } }
-    @keyframes itemIn { to { opacity: 1; transform: none; } }
-    @keyframes lbIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes imgIn { from { transform: scale(0.94); opacity: 0; } to { transform: none; opacity: 1; } }
+    /* ── SPINNER ── */
+    .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(80,87,77,0.2);
+      border-top-color: var(--text);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* RESPONSIVE */
-    @media (max-width: 480px) {
-      :root { --col-min: 160px; }
+    /* ── HIDDEN FILE INPUT ── */
+    #file-input { display: none; }
+
+    /* ── DRAG OVERLAY ── */
+    #drag-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: rgba(218,215,205,0.88);
+      border: 3px dashed rgba(80,87,77,0.4);
+      align-items: center;
+      justify-content: center;
+      font-family: 'Special Elite', cursive;
+      font-size: 1.4rem;
+      color: var(--text);
+      letter-spacing: 0.08em;
+    }
+    #drag-overlay.show { display: flex; }
+
+    @media (max-width: 600px) {
+      #gallery { columns: 2 140px; padding: 20px 12px 48px; }
       nav { padding: 0 16px; }
-      #gallery { padding: 0 12px; column-gap: 8px; }
-      .photo-item { margin-bottom: 8px; }
     }
   </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
-  <a class="logo" href="#">
-    <span class="logo-text">Gallery</span>
-  </a>
-  <div class="nav-actions">
-    <span class="count-badge" id="count-label">0 ảnh</span>
-    <button id="add-btn" title="Thêm ảnh" aria-label="Thêm ảnh">+</button>
-    <input type="file" id="file-input" accept="image/*" multiple />
+  <span class="nav-logo">Gallery</span>
+  <div class="nav-right">
+    <span class="nav-count" id="nav-count">0 ẢNH</span>
+    <button class="nav-add" id="add-btn" title="Thêm ảnh">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="9" y1="2" x2="9" y2="16"/>
+        <line x1="2" y1="9" x2="16" y2="9"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
-<main>
-  <div id="empty-state">
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-      <rect x="4" y="14" width="48" height="34" rx="3" stroke="#50574d" stroke-width="1.5"/>
-      <circle cx="18" cy="26" r="4" stroke="#50574d" stroke-width="1.5"/>
-      <path d="M4 38l12-10 8 8 8-6 12 10" stroke="#50574d" stroke-width="1.5" stroke-linejoin="round"/>
-    </svg>
-    <p>Bộ sưu tập của bạn trống</p>
-    <span>Nhấn + để thêm ảnh đầu tiên</span>
-  </div>
-  <div id="gallery"></div>
-</main>
+<!-- HIDDEN FILE INPUT -->
+<input type="file" id="file-input" accept="image/*" multiple />
 
-<!-- Lightbox -->
-<div id="lightbox">
-  <button id="lb-close">✕</button>
-  <img id="lb-img" src="" alt="" />
-  <div id="lb-nav"></div>
+<!-- GALLERY GRID -->
+<div id="gallery">
+  <div id="empty-state">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="#50574d" stroke-width="1.5">
+      <rect x="6" y="10" width="36" height="28" rx="3"/>
+      <circle cx="17" cy="20" r="3"/>
+      <polyline points="6,32 15,22 22,30 29,22 42,34"/>
+    </svg>
+    <span class="es-title">Bộ sưu tập của bạn trống</span>
+    <span class="es-sub">Nhấn + để thêm ảnh đầu tiên</span>
+  </div>
 </div>
 
-<!-- Drag-drop overlay -->
-<div id="drop-zone">Thả ảnh vào đây</div>
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button id="lightbox-close">×</button>
+  <img id="lightbox-img" src="" alt=""/>
+</div>
 
-<!-- Toast -->
+<!-- DRAG OVERLAY -->
+<div id="drag-overlay">Thả ảnh vào đây</div>
+
+<!-- TOAST -->
 <div id="toast"></div>
 
-<script>
-  const gallery    = document.getElementById('gallery');
-  const emptyState = document.getElementById('empty-state');
-  const fileInput  = document.getElementById('file-input');
-  const addBtn     = document.getElementById('add-btn');
-  const countLabel = document.getElementById('count-label');
-  const lightbox   = document.getElementById('lightbox');
-  const lbImg      = document.getElementById('lb-img');
-  const lbClose    = document.getElementById('lb-close');
-  const lbNav      = document.getElementById('lb-nav');
-  const dropZone   = document.getElementById('drop-zone');
-  const toast      = document.getElementById('toast');
+<!-- FIREBASE -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  let photos = [];       // {id, src, date}
-  let currentLb = null;
+  const firebaseConfig = {
+    apiKey: "AIzaSyA8i1xZQBMzvQZj0opix1wQiSgvCPtx14s",
+    authDomain: "nbao-f08cc.firebaseapp.com",
+    projectId: "nbao-f08cc",
+    storageBucket: "nbao-f08cc.firebasestorage.app",
+    messagingSenderId: "211816413076",
+    appId: "1:211816413076:web:66fe6539c2558f5fde0181",
+    measurementId: "G-SNX97L72X3"
+  };
 
-  // ──────────────── UTILITIES ────────────────
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const COLLECTION = "gallery_photos";
 
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  // ── Cloudinary config ──
+  const CLOUD_NAME = "ddz0y80eh";
+  const UPLOAD_PRESET = "ny7yscu9"; // unsigned preset
 
-  function fmtDate(d) {
-    return d.toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric' });
+  // ── DOM refs ──
+  const gallery     = document.getElementById("gallery");
+  const emptyState  = document.getElementById("empty-state");
+  const addBtn      = document.getElementById("add-btn");
+  const fileInput   = document.getElementById("file-input");
+  const lightbox    = document.getElementById("lightbox");
+  const lbImg       = document.getElementById("lightbox-img");
+  const lbClose     = document.getElementById("lightbox-close");
+  const toast       = document.getElementById("toast");
+  const dragOverlay = document.getElementById("drag-overlay");
+  const navCount    = document.getElementById("nav-count");
+
+  // ── Toast helper ──
+  let toastTimer;
+  function showToast(msg, duration = 2800) {
+    toast.innerHTML = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("show"), duration);
   }
 
-  function showToast(msg, dur = 2200) {
-    toast.textContent = msg;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), dur);
+  // ── Collapse-randomly heights (for masonry feel) ──
+  // We keep natural image ratio; "randomly" refers to staggered animation delay
+  function randomDelay() {
+    return (Math.random() * 0.35).toFixed(2) + "s";
   }
 
-  function updateCount() {
-    const n = photos.length;
-    countLabel.textContent = n === 0 ? '0 ảnh' : `${n} ảnh`;
-  }
+  // ── Render a single photo card ──
+  function renderCard(id, url, timestamp) {
+    // Remove empty state
+    emptyState.style.display = "none";
 
-  function syncEmpty() {
-    emptyState.style.display = photos.length === 0 ? 'flex' : 'none';
-  }
+    const card = document.createElement("div");
+    card.className = "photo-card";
+    card.dataset.id = id;
+    card.style.animationDelay = randomDelay();
 
-  // ──────────────── ADD PHOTOS ────────────────
+    const img = document.createElement("img");
+    img.src = url;
+    img.loading = "lazy";
+    img.alt = "";
 
-  function addPhotos(files) {
-    if (!files || !files.length) return;
-    let added = 0;
-    Array.from(files).forEach(file => {
-      if (!file.type.startsWith('image/')) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        const photo = { id: uid(), src: e.target.result, date: fmtDate(new Date()) };
-        photos.push(photo);
-        renderCard(photo, true);
-        updateCount();
-        syncEmpty();
-        added++;
-        if (added === 1) showToast('✓ Đã thêm ảnh');
-      };
-      reader.readAsDataURL(file);
-    });
-  }
+    const overlay = document.createElement("div");
+    overlay.className = "overlay";
 
-  // ──────────────── RENDER CARD ────────────────
-
-  // Random span heights to create "collapsed" feel
-  function randomSpan() {
-    const opts = [1, 1, 1, 2]; // mostly 1-col span feel
-    return opts[Math.floor(Math.random() * opts.length)];
-  }
-
-  function renderCard(photo, animate) {
-    const item = document.createElement('div');
-    item.className = 'photo-item';
-    item.dataset.id = photo.id;
-    item.style.animationDelay = animate ? `${Math.random() * 0.12}s` : '0s';
-
-    // Random slight rotation for organic feel
-    const rot = (Math.random() - 0.5) * 1.4;
-    item.style.transform = `translateY(22px) scale(0.97) rotate(${rot}deg)`;
-    item.style.setProperty('--rot', `${rot}deg`);
-
-    item.innerHTML = `
-      <img src="${photo.src}" alt="Ảnh ${photo.date}" loading="lazy" />
-      <div class="photo-overlay">
-        <span class="photo-date">${photo.date}</span>
-      </div>
-      <button class="delete-btn" title="Xóa ảnh">✕</button>
-    `;
-
-    item.querySelector('img').addEventListener('click', () => openLightbox(photo.id));
-    item.querySelector('.delete-btn').addEventListener('click', e => {
+    const delBtn = document.createElement("button");
+    delBtn.className = "del-btn";
+    delBtn.title = "Xoá ảnh";
+    delBtn.innerHTML = "×";
+    delBtn.addEventListener("click", async (e) => {
       e.stopPropagation();
-      deletePhoto(photo.id, item);
+      if (!confirm("Xoá ảnh này?")) return;
+      await deleteDoc(doc(db, COLLECTION, id));
+      showToast("Đã xoá ảnh");
     });
 
-    gallery.appendChild(item);
+    card.appendChild(img);
+    card.appendChild(overlay);
+    card.appendChild(delBtn);
+
+    card.addEventListener("click", () => {
+      lbImg.src = url;
+      lightbox.classList.add("open");
+    });
+
+    gallery.appendChild(card);
   }
 
-  // ──────────────── DELETE ────────────────
+  // ── Real-time sync from Firestore ──
+  const q = query(collection(db, COLLECTION), orderBy("createdAt", "desc"));
+  onSnapshot(q, (snapshot) => {
+    gallery.querySelectorAll(".photo-card").forEach(c => c.remove());
 
-  function deletePhoto(id, el) {
-    el.style.transition = 'opacity 0.3s, transform 0.3s';
-    el.style.opacity = '0';
-    el.style.transform = 'scale(0.88)';
-    setTimeout(() => {
-      el.remove();
-      photos = photos.filter(p => p.id !== id);
-      updateCount();
-      syncEmpty();
-      if (currentLb === id) closeLightbox();
-      else buildLbNav();
-      showToast('Đã xóa ảnh');
-    }, 300);
+    const docs = snapshot.docs;
+    const count = docs.length;
+    navCount.textContent = count + " ẢNH";
+
+    if (count === 0) {
+      emptyState.style.display = "flex";
+    } else {
+      emptyState.style.display = "none";
+      docs.forEach(d => renderCard(d.id, d.data().url, d.data().createdAt));
+    }
+  });
+
+  // ── Upload to Cloudinary ──
+  async function uploadToCloudinary(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+      method: "POST",
+      body: formData
+    });
+    if (!res.ok) throw new Error("Cloudinary upload failed");
+    const data = await res.json();
+    return data.secure_url;
   }
 
-  // ──────────────── LIGHTBOX ────────────────
-
-  function openLightbox(id) {
-    currentLb = id;
-    const photo = photos.find(p => p.id === id);
-    if (!photo) return;
-    lbImg.src = photo.src;
-    lightbox.classList.add('open');
-    buildLbNav();
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    currentLb = null;
-    document.body.style.overflow = '';
-  }
-
-  function buildLbNav() {
-    lbNav.innerHTML = '';
-    photos.forEach(p => {
-      const dot = document.createElement('div');
-      dot.className = 'lb-dot' + (p.id === currentLb ? ' active' : '');
-      dot.addEventListener('click', () => openLightbox(p.id));
-      lbNav.appendChild(dot);
+  // ── Save URL to Firestore ──
+  async function savePhoto(url) {
+    await addDoc(collection(db, COLLECTION), {
+      url,
+      createdAt: Date.now()
     });
   }
 
-  function lbMove(dir) {
-    const idx = photos.findIndex(p => p.id === currentLb);
-    if (idx < 0) return;
-    const next = photos[(idx + dir + photos.length) % photos.length];
-    if (next) openLightbox(next.id);
+  // ── Handle files ──
+  async function handleFiles(files) {
+    if (!files || files.length === 0) return;
+    const arr = Array.from(files).filter(f => f.type.startsWith("image/"));
+    if (arr.length === 0) return;
+
+    showToast(`<span class="spinner"></span> Đang tải ${arr.length} ảnh…`, 15000);
+
+    let uploaded = 0;
+    for (const file of arr) {
+      try {
+        const url = await uploadToCloudinary(file);
+        await savePhoto(url);
+        uploaded++;
+      } catch (err) {
+        console.error(err);
+        showToast("Lỗi khi tải ảnh: " + err.message);
+      }
+    }
+    if (uploaded > 0) showToast(`✓ Đã thêm ${uploaded} ảnh`);
   }
 
-  lbClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
-  document.addEventListener('keydown', e => {
-    if (!lightbox.classList.contains('open')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowRight') lbMove(1);
-    if (e.key === 'ArrowLeft') lbMove(-1);
-  });
+  // ── Button click → file input ──
+  addBtn.addEventListener("click", () => fileInput.click());
+  fileInput.addEventListener("change", () => handleFiles(fileInput.files));
 
-  // ──────────────── FILE INPUT ────────────────
-
-  addBtn.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', e => {
-    addPhotos(e.target.files);
-    fileInput.value = '';
-  });
-
-  // ──────────────── DRAG & DROP ────────────────
-
+  // ── Drag & Drop ──
   let dragCounter = 0;
-
-  document.addEventListener('dragenter', e => {
+  document.addEventListener("dragenter", (e) => {
     e.preventDefault();
     dragCounter++;
-    dropZone.classList.add('active');
+    dragOverlay.classList.add("show");
   });
-  document.addEventListener('dragleave', () => {
+  document.addEventListener("dragleave", () => {
     dragCounter--;
-    if (dragCounter <= 0) { dragCounter = 0; dropZone.classList.remove('active'); }
+    if (dragCounter <= 0) { dragCounter = 0; dragOverlay.classList.remove("show"); }
   });
-  document.addEventListener('dragover', e => e.preventDefault());
-  document.addEventListener('drop', e => {
+  document.addEventListener("dragover", (e) => e.preventDefault());
+  document.addEventListener("drop", (e) => {
     e.preventDefault();
     dragCounter = 0;
-    dropZone.classList.remove('active');
-    addPhotos(e.dataTransfer.files);
+    dragOverlay.classList.remove("show");
+    handleFiles(e.dataTransfer.files);
   });
 
-  // ──────────────── SWIPE LIGHTBOX ────────────────
-
-  let touchStartX = 0;
-  lightbox.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
-  lightbox.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(dx) > 50) lbMove(dx < 0 ? 1 : -1);
+  // ── Lightbox close ──
+  lbClose.addEventListener("click", () => lightbox.classList.remove("open"));
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) lightbox.classList.remove("open");
   });
-
-  // ──────────────── INIT ────────────────
-  syncEmpty();
-  updateCount();
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") lightbox.classList.remove("open");
+  });
 </script>
 </body>
 </html>
