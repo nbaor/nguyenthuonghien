@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NTH's gallery</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Special+Elite&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>NTH · Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Inconsolata:wght@800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0e0e0e;
-      --surface: #161616;
+      --bg: #dad7cd;
+      --surface: #c9c6bc;
       --nav-h: 64px;
-      --accent: #e8d5b0;
-      --accent2: #c9a96e;
-      --text: #f0ece4;
-      --muted: #6b6560;
-      --border: rgba(232,213,176,0.12);
+      --accent: #50574d;
+      --accent2: #50574d;
+      --text: #50574d;
+      --muted: #7a8276;
+      --border: rgba(80,87,77,0.18);
       --radius: 4px;
       --col-min: 220px;
     }
@@ -45,7 +45,7 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       height: var(--nav-h);
-      background: rgba(14,14,14,0.88);
+      background: rgba(218,215,205,0.88);
       backdrop-filter: blur(18px) saturate(1.4);
       -webkit-backdrop-filter: blur(18px) saturate(1.4);
       border-bottom: 1px solid var(--border);
@@ -76,7 +76,7 @@
       border-radius: 50%;
     }
     .logo-text {
-      font-family: 'Special Elite', cursive;
+      font-family: 'Special Elite', serif;
       font-size: 1.15rem;
       color: var(--accent);
       letter-spacing: 0.04em;
@@ -132,9 +132,9 @@
     }
     #empty-state svg { opacity: 0.2; }
     #empty-state p {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Inconsolata', monospace;
+      font-weight: 800;
       font-size: 1.4rem;
-      font-style: italic;
       color: var(--muted);
     }
     #empty-state span {
@@ -318,7 +318,6 @@
 
 <nav>
   <a class="logo" href="#">
-    <div class="logo-mark"></div>
     <span class="logo-text">Gallery</span>
   </a>
   <div class="nav-actions">
@@ -331,9 +330,9 @@
 <main>
   <div id="empty-state">
     <svg width="56" height="56" viewBox="0 0 56 56" fill="none">
-      <rect x="4" y="14" width="48" height="34" rx="3" stroke="#e8d5b0" stroke-width="1.5"/>
-      <circle cx="18" cy="26" r="4" stroke="#e8d5b0" stroke-width="1.5"/>
-      <path d="M4 38l12-10 8 8 8-6 12 10" stroke="#e8d5b0" stroke-width="1.5" stroke-linejoin="round"/>
+      <rect x="4" y="14" width="48" height="34" rx="3" stroke="#50574d" stroke-width="1.5"/>
+      <circle cx="18" cy="26" r="4" stroke="#50574d" stroke-width="1.5"/>
+      <path d="M4 38l12-10 8 8 8-6 12 10" stroke="#50574d" stroke-width="1.5" stroke-linejoin="round"/>
     </svg>
     <p>Bộ sưu tập của bạn trống</p>
     <span>Nhấn + để thêm ảnh đầu tiên</span>
